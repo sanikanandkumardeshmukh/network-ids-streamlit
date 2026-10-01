@@ -5,8 +5,8 @@ import streamlit as st
 # -----------------------------
 VALID_USERS = {
     "admin": "admin123",
-    "aditya": "aditya11",
-    "sanika": "sanika11",
+    "sanika": "sanika11"
+    "aditya": "aditya11"
     "vishwajit": "vishwajit11"
 }
 
@@ -15,7 +15,7 @@ if "logged_in" not in st.session_state:
 
 def login():
     st.title("🔐 Secure Login")
-    st.subheader("Network IDS Dashboard")
+    st.subheader("Network Traffic Analytics Dashboard")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -49,10 +49,10 @@ from sklearn.decomposition import PCA
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Network IDS Dashboard", layout="wide")
+st.set_page_config(page_title="Network Traffic Analytics Dashboard", layout="wide")
 
-st.title("🚨 Network Intrusion Detection System (ML-based)")
-st.caption("Cybersecurity + Machine Learning")
+st.title("📊 Network Traffic Data Analytics")
+st.caption("Data Analysis + Pattern Analysis")
 
 # -----------------------------
 # Load Dataset
@@ -89,10 +89,10 @@ st.sidebar.write(f"Logged in as: **{st.session_state.user}**")
 if st.sidebar.button("Logout"):
     logout()
 
-st.sidebar.header("⚙️ Detection Controls")
+st.sidebar.header("⚙️ Analysis Controls")
 
 threshold_percent = st.sidebar.slider(
-    "Anomaly Threshold (%)",
+    "Analysis Threshold (%)",
     min_value=10,
     max_value=50,
     value=30
@@ -120,27 +120,27 @@ threshold = np.percentile(scores, threshold_percent)
 pred = np.where(scores < threshold, 1, 0)
 
 # -----------------------------
-# SOC METRICS
+# ANALYTICS METRICS
 # -----------------------------
-st.subheader("📊 SOC Overview")
+st.subheader("📊 Data Analytics Overview")
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Total Traffic", len(pred))
-col2.metric("Threats Detected", int(np.sum(pred)))
-col3.metric("Safe Traffic", int(len(pred) - np.sum(pred)))
-col4.metric("Threat %", f"{(np.sum(pred)/len(pred))*100:.2f}%")
+col1.metric("Total Records", len(pred))
+col2.metric("Anomalous Records", int(np.sum(pred)))
+col3.metric("Normal Records", int(len(pred) - np.sum(pred)))
+col4.metric("Anomaly %", f"{(np.sum(pred)/len(pred))*100:.2f}%")
 
 st.caption(f"🕒 Scan Time: {datetime.now()}")
 
 # -----------------------------
-# Alerts
+# Data Pattern Summary
 # -----------------------------
-st.subheader("🚨 Live Alerts (Sample)")
+st.subheader("📋 Data Pattern Summary (Sample)")
 
 alert_df = pd.DataFrame({
     "Connection": range(1, 11),
-    "Status": ["🚨 Anomaly" if scores[i] < threshold else "✅ Normal" for i in range(10)],
+    "Status": ["⚠️ Unusual Pattern" if scores[i] < threshold else "✅ Normal Pattern" for i in range(10)],
     "Score": scores[:10]
 })
 
@@ -149,7 +149,7 @@ st.dataframe(alert_df, use_container_width=True)
 # -----------------------------
 # PCA Visualization
 # -----------------------------
-st.subheader("📈 Traffic Visualization")
+st.subheader("📈 Traffic Pattern Visualization")
 
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
@@ -160,7 +160,7 @@ ax.scatter(X_pca[pred == 0, 0], X_pca[pred == 0, 1],
 ax.scatter(X_pca[pred == 1, 0], X_pca[pred == 1, 1],
            c="red", alpha=0.6, s=10, label="Anomaly")
 
-ax.set_title("Network Traffic Anomaly Detection")
+ax.set_title("Network Traffic Pattern Analysis")
 ax.set_xlabel("Principal Component 1")
 ax.set_ylabel("Principal Component 2")
 ax.legend()
@@ -169,9 +169,9 @@ ax.grid(True)
 st.pyplot(fig)
 
 # -----------------------------
-# Download Anomalies
+# Download Analytical Results
 # -----------------------------
-st.subheader("📁 Forensic Report")
+st.subheader("📁 Analytical Report")
 
 anomalies = data[pred == 1].copy()
 anomalies["anomaly_score"] = scores[pred == 1]
@@ -179,10 +179,10 @@ anomalies["anomaly_score"] = scores[pred == 1]
 csv = anomalies.to_csv(index=False).encode("utf-8")
 
 st.download_button(
-    label="⬇️ Download Detected Anomalies CSV",
+    label="⬇️ Download Analyzed Records CSV",
     data=csv,
-    file_name="detected_anomalies.csv",
+    file_name="analyzed_records.csv",
     mime="text/csv"
 )
 
-st.success("IDS Dashboard Running Successfully 🚀")
+st.success("Data Analytics Dashboard Running Successfully 🚀")
