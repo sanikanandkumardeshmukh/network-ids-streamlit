@@ -5,8 +5,8 @@ import streamlit as st
 # -----------------------------
 VALID_USERS = {
     "admin": "admin123",
-    "sanika": "sanika11"
-    "aditya": "aditya11"
+    "sanika": "sanika11",
+    "aditya": "aditya11",
     "vishwajit": "vishwajit11"
 }
 
